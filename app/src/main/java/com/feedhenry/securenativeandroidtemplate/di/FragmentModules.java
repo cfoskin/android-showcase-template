@@ -6,6 +6,7 @@ import com.feedhenry.securenativeandroidtemplate.features.authentication.Authent
 import com.feedhenry.securenativeandroidtemplate.features.device.DeviceFragment;
 import com.feedhenry.securenativeandroidtemplate.features.home.HomeFragment;
 import com.feedhenry.securenativeandroidtemplate.features.network.NetworkFragment;
+import com.feedhenry.securenativeandroidtemplate.features.serverless.ServerlessFragment;
 import com.feedhenry.securenativeandroidtemplate.features.storage.NotesDetailFragment;
 import com.feedhenry.securenativeandroidtemplate.features.storage.NotesListFragment;
 import dagger.Module;
@@ -41,4 +42,7 @@ public abstract class FragmentModules {
 
     @ContributesAndroidInjector
     abstract NetworkFragment contributeNetworkFragmentInjector();
+
+    @ContributesAndroidInjector
+    abstract ServerlessFragment contributeServerlessFragmentInjector();
 }

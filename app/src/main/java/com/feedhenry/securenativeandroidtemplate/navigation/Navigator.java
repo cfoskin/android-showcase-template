@@ -15,6 +15,7 @@ import com.feedhenry.securenativeandroidtemplate.features.home.HomeFragment;
 import com.feedhenry.securenativeandroidtemplate.R;
 import com.feedhenry.securenativeandroidtemplate.domain.models.Note;
 import com.feedhenry.securenativeandroidtemplate.features.network.NetworkFragment;
+import com.feedhenry.securenativeandroidtemplate.features.serverless.ServerlessFragment;
 import com.feedhenry.securenativeandroidtemplate.features.storage.NotesDetailFragment;
 import com.feedhenry.securenativeandroidtemplate.features.storage.NotesListFragment;
 import com.feedhenry.securenativeandroidtemplate.mvp.views.BaseFragment;
@@ -94,6 +95,11 @@ public class Navigator {
             Snackbar.make(activity.findViewById(android.R.id.content), R.string.not_authenticated_api_access, Snackbar.LENGTH_LONG).show();
             navigateToAuthenticationView(activity);
         }
+    }
+
+    public void navigateToServerlessView(MainActivity activity) {
+        ServerlessFragment serverlessFragment = new ServerlessFragment();
+        loadFragment(activity, serverlessFragment, ServerlessFragment.TAG);
     }
 
     public void loadFragment(BaseActivity activity, BaseFragment fragment, String fragmentTag) {

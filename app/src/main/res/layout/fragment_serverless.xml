@@ -1,0 +1,70 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/notes_main_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context="com.feedhenry.securenativeandroidtemplate.features.device.ServerlessFragment"
+        tools:layout_editor_absoluteY="93dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="200px"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/serverlessInstruction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/serverless_instruction"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/serverlessHint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:hint="@string/serverless_hint"
+                    android:inputType="text"
+                    android:textAlignment="textStart" />
+            </android.support.design.widget.TextInputLayout>
+
+            <RadioButton
+                android:id="@+id/serverlessButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:button="@drawable/ic_openwhisk_send"
+                android:buttonTint="@color/green"
+                android:padding="15dp"
+                android:text="@string/response_from_openwhisk"
+                android:textColor="@color/green" />
+
+        </LinearLayout>
+
+    </ScrollView>
+</android.support.design.widget.CoordinatorLayout>

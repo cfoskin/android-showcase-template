@@ -28,5 +28,9 @@
             android:id="@+id/nav_device"
             android:icon="@drawable/ic_phone_lock"
             android:title="@string/fragment_title_device" />
+        <item
+            android:id="@+id/nav_serverless"
+            android:icon="@drawable/ic_openwhisk"
+            android:title="@string/serverless_title" />
     </group>
 </menu>
