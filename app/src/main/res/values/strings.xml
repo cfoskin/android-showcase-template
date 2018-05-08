@@ -96,8 +96,10 @@
 
     <!-- Strings related to Device -->
     <string name="serverless_title">Serverless</string>
-    <string name="serverless_instruction">Enter text send to Openwhisk action</string>
+    <string name="serverless_instruction">Enter text to send to Openwhisk</string>
     <string name="serverless_hint">Hello Openwhisk!</string>
+    <string name="serverless_error">Error contacting Openwhisk</string>
+
     <string name="fragment_title_device">Device Trust</string>
     <string name="trust_score_header_title">Device Trust Score</string>
     <string name="root_detected_positive">Root Access Detected</string>
