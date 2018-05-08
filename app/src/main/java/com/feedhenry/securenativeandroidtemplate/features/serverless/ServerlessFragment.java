@@ -96,7 +96,7 @@ public class ServerlessFragment extends BaseFragment<ServerlessPresenter, Server
     private void callOpenwhisk() {
         ServiceConfiguration serviceConfig = mobileCore.getServiceConfiguration("serverless");
         Map<String, String > serviceConfigProperties = serviceConfig.getProperties();
-        String authString = serviceConfigProperties.get("auth-string");
+        String credentials = serviceConfigProperties.get("credentials");
         String url = serviceConfig.getUrl();
         String action = serviceConfigProperties.get("action");
         String openwhiskUrl = url + action;
@@ -105,7 +105,7 @@ public class ServerlessFragment extends BaseFragment<ServerlessPresenter, Server
             @Override
             public void onClick(View view) {
                 //send request
-                new ServerlessService(openwhiskUrl, authString).execute();
+                new ServerlessService(openwhiskUrl, credentials).execute();
             }
         });
 
@@ -113,17 +113,17 @@ public class ServerlessFragment extends BaseFragment<ServerlessPresenter, Server
     }
 
     class ServerlessService extends AsyncTask<Void, Void, Void> {
-        String url, authString;
+        String url, credentials;
 
-        protected ServerlessService(String url, String authString){
-            this.authString = authString;
+        protected ServerlessService(String url, String credentials){
+            this.credentials = credentials;
             this.url = url;
         }
         @Override
         protected Void doInBackground(Void... voids) {
             String apiUrl = this.url;
-            String authString = this.authString;
-            String authToken = android.util.Base64.encodeToString(authString.getBytes(), android.util.Base64.NO_WRAP);
+            String credentials = this.credentials;
+            String authToken = android.util.Base64.encodeToString(credentials.getBytes(), android.util.Base64.NO_WRAP);
             Log.d(TAG, authToken);
             try {
 

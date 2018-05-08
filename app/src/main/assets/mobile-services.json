@@ -18,7 +18,7 @@
       "type": "serverless",
       "url": "https://openwhisk-openwhisk.192.168.42.249.nip.io/api/v1/namespaces/_/actions/",
       "config": {
-        "auth-string": "789c46b1-71f6-4ed5-8c54-816aa4f8c502:GAGkPBRVJH8r4V7rIaBNjNdrFT2gl7Sja0cL1LWdiqkgca2QBQfddiK58KUflRMv",
+        "credentials": "789c46b1-71f6-4ed5-8c54-816aa4f8c502:GAGkPBRVJH8r4V7rIaBNjNdrFT2gl7Sja0cL1LWdiqkgca2QBQfddiK58KUflRMv",
         "action": "reverse"
       }
     },
