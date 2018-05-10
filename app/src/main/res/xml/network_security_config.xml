@@ -15,6 +15,9 @@
         <trust-anchors>
             <!-- Additionally trust user added CAs -->
             <certificates src="user" />
+            <certificates src="system" />
+            <certificates src="@raw/cert"/>
+            <certificates src="@raw/my_ca"/>
         </trust-anchors>
     </debug-overrides>
 </network-security-config>

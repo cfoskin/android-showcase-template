@@ -13,15 +13,17 @@
       }
     },
     {
-      "id": "serverless",
+      "id": "myapp-android-binding-secret-914",
       "name": "serverless",
       "type": "serverless",
-      "url": "https://openwhisk-openwhisk.192.168.42.249.nip.io/api/v1/namespaces/_/actions/",
+      "url": "openwhisk-serverless.192.168.42.153.nip.io",
       "config": {
-        "credentials": "789c46b1-71f6-4ed5-8c54-816aa4f8c502:GAGkPBRVJH8r4V7rIaBNjNdrFT2gl7Sja0cL1LWdiqkgca2QBQfddiK58KUflRMv",
-        "action": "reverse"
+        "encoded_secret": "Nzg5YzQ2YjEtNzFmNi00ZWQ1LThjNTQtODE2YWE0ZjhjNTAyOld2Q0VxY2ZpQ1ZPaTVQMHc2REhKeGRvQmRNNG0zV2UwbDVEMThpQkt5cjJmYkJoaHlRMk4wdnJrYTNUREx4cjE=",
+        "appType": "android",
+        "action_name": "reverse"
       }
-    },
+    }
+  ,
     {
       "id": "keycloak",
       "name": "keycloak",

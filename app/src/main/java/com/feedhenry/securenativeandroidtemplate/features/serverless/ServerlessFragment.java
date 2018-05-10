@@ -21,12 +21,10 @@ import com.feedhenry.securenativeandroidtemplate.navigation.Navigator;
 
 import org.aerogear.mobile.core.MobileCore;
 import org.aerogear.mobile.core.configuration.ServiceConfiguration;
-import org.aerogear.mobile.core.http.HttpRequest;
-import org.aerogear.mobile.core.http.HttpResponse;
 import org.aerogear.mobile.security.SecurityService;
+import org.json.JSONObject;
 
-import java.net.URLDecoder;
-import java.util.Base64;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -34,7 +32,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.AndroidInjection;
-import okhttp3.Credentials;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -71,8 +68,8 @@ public class ServerlessFragment extends BaseFragment<ServerlessPresenter, Server
     @BindView(R.id.serverlessInstruction)
     TextView serverlessInstruction;
 
-    @BindView(R.id.serverlessHint)
-    TextInputEditText serverlessHint;
+    @BindView(R.id.serverlessTextToSend)
+    TextInputEditText serverlessTextToSend;
 
     @BindView(R.id.serverlessButton)
     RadioButton serverlessButton;
@@ -85,58 +82,67 @@ public class ServerlessFragment extends BaseFragment<ServerlessPresenter, Server
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_serverless, container, false);
         ButterKnife.bind(this, view);
-        callOpenwhisk();
-        return view;
-    }
 
-    private void callOpenwhisk() {
-        ServiceConfiguration serviceConfig = mobileCore.getServiceConfiguration("serverless");
-        Map<String, String > serviceConfigProperties = serviceConfig.getProperties();
-        String credentials = serviceConfigProperties.get("credentials");
-        String url = serviceConfig.getUrl();
-        String action = serviceConfigProperties.get("action");
-        String openwhiskUrl = url + action;
-        Log.e(TAG, "Openwhisk url : " + openwhiskUrl);
+        //get openwhisk configuration from mobile services json
+        Map<String,String> openwhiskConfig = ConfigureOpenwhisk();
+        // set up listener
         serverlessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //send request
-                new ServerlessService(openwhiskUrl, credentials).execute();
+                new ServerlessService(openwhiskConfig.get("url"), openwhiskConfig.get("authString")).execute();
             }
         });
-
-
+        return view;
     }
 
-    class ServerlessService extends AsyncTask<Void, Void, Void> {
-        String url, credentials;
+    /**
+     *
+     * @return Map of the openwhisk configuration
+     */
+    private Map<String, String> ConfigureOpenwhisk() {
+        Map<String,String> openwhiskConfig = new HashMap<>();
+        ServiceConfiguration serviceConfig = mobileCore.getServiceConfiguration("serverless");
+        Map<String, String > serviceConfigProperties = serviceConfig.getProperties();
+        String authString = serviceConfigProperties.get("encoded_secret");
+        String openwhiskBaseUrl = serviceConfig.getUrl();
+        String action = serviceConfigProperties.get("action_name");
+        String openwhiskUrl = "https://" + openwhiskBaseUrl  +  "/api/v1/namespaces/_/actions/" + action;
+        openwhiskConfig.put("url", openwhiskUrl);
+        openwhiskConfig.put("authString", authString);
+        return  openwhiskConfig;
+    }
 
-        protected ServerlessService(String url, String credentials){
-            this.credentials = credentials;
+    /**
+     * Class for doing the http request and updating the UI with the response
+     */
+    class ServerlessService extends AsyncTask<Void, Void, Void> {
+        String url, authString;
+
+        private ServerlessService(String url, String authString){
+            this.authString = authString;
             this.url = url;
         }
+
         @Override
         protected Void doInBackground(Void... voids) {
             String apiUrl = this.url;
-            String credentials = this.credentials;
-            String authToken = android.util.Base64.encodeToString(credentials.getBytes(), android.util.Base64.NO_WRAP);
-            Log.d(TAG, authToken);
+            String credentials = this.authString;
+            String token = "Basic "  + credentials;
             try {
-
                 HttpUrl.Builder urlBuilder = HttpUrl.parse(apiUrl).newBuilder();
                 urlBuilder.addQueryParameter("blocking", "true");
                 urlBuilder.addQueryParameter("result", "true");
                 String url  = urlBuilder.build().toString();
                 MediaType JSON
                         = MediaType.parse("application/json; charset=utf-8");
-                RequestBody body = RequestBody.create(JSON, "{\"name\":\"olleH\"}" );
-
+                String input = String.format("{\"name\":\"%s\"}", serverlessTextToSend.getText().toString());
+                RequestBody body = RequestBody.create(JSON, input );
                 Request request = new Request.Builder()
-                        .addHeader("Authorization", "Basic Nzg5YzQ2YjEtNzFmNi00ZWQ1LThjNTQtODE2YWE0ZjhjNTAyOkFMQkNzaVRzTUF2SllHZEp3cEZkV0lHMGE4NWxOOFBRdzJYeTZQM2N0cVhkdkJjNWY0SE9CQ1RMSEVRUGVhazU="  )
+                        .addHeader("Authorization", token)
                         .addHeader("Content-Type", "application/json")
                         .url(url)
                         .post(body)
@@ -144,11 +150,31 @@ public class ServerlessFragment extends BaseFragment<ServerlessPresenter, Server
                 OkHttpClient client = new OkHttpClient();
 
                 Response response = client.newCall(request).execute();
-                Log.d(TAG,  response.body().string());
+                if (response.isSuccessful()) {
+                    String responseText = response.body().string();
+                    //update the UI
+                    updateUi(responseText);
+                    response.close();
+                }
             } catch (Exception e) {
-                Log.e(TAG, "Error - Exception", e);
+                Log.e(TAG, "Error calling Openwhisk", e);
             }
             return null;
+        }
+
+        /**
+         *
+         * @param responseText Update the Ui using the response body
+         */
+        private void updateUi(String responseText){
+            try {
+                JSONObject jsonObject = new JSONObject(responseText);
+                String textToDisplay = jsonObject.get("result").toString();
+                serverlessButton.setText(textToDisplay);
+
+            } catch (Throwable t) {
+                Log.e(TAG, "Could not parse malformed JSON: \"" + responseText + "\"");
+            }
         }
     }
 
